@@ -30,7 +30,7 @@ let close_ticket ticket = { ticket with status = Closed; }
 
 let next_status ticket =
   match (ticket.status, ticket.assigned_to) with
-  | _, None -> Left "Ticket need to be assigned."
+  | _, None -> Left "Ticket needs to be assigned."
   | Closed, _ -> Left "Ticket already closed."
   | Open, _ -> Right { ticket with status = InProgress; }
   | InProgress, _ -> Right { ticket with status = Resolved; }
