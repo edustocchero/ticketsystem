@@ -34,12 +34,12 @@ let find_all _request =
 
 (* Assign To Ticket *)
 let assign_ticket request =
-  let ticket_id = Request.query "id" request in
-  let assignee_id = Request.query "assignee" request in
-  match ticket_id, assignee_id with
-  | _, None -> Lwt.return (Response.make ~status:`Bad_request ())
-  | id, Some assignee_id ->
-    match Controllers.assign_ticket id assignee_id with
+  let* json = Request.to_json_exn request in
+  let assignment = Ticket.ticket_assignment_of_yojson json in
+  match assignment with
+  | Error _ -> Lwt.return (Response.make ~status:`Bad_request ())
+  | Ok assignment ->
+    match Controllers.assign_ticket assignment with
     | Either.Right ticket -> json_ticket_response ticket
     | Either.Left msg ->
       Lwt.return (Response.make ~body:(Body.of_string msg) ~status:`Not_found ())

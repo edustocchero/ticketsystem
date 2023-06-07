@@ -28,11 +28,11 @@ let update_ticket (ticket : Ticket.t) =
     (fun (t : Ticket.t) -> if t.id = ticket.id then ticket else t)
     !tickets
 
-let assign_ticket id assignee =
-  match find_ticket_by_id id with
+let assign_ticket (assignment : Ticket.ticket_assignment) =
+  match find_ticket_by_id (Some assignment.ticket_id) with
   | None -> Left "Ticket not found."
   | Some ticket ->
-    match Ticket.assign_to ticket ~assignee_id:assignee with
+    match Ticket.assign_to ticket ~assignee_id:assignment.assignee_id with
     | Left msg -> Left msg
     | Right ticket ->
       tickets := update_ticket ticket;

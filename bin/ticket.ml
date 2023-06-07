@@ -17,6 +17,12 @@ type new_ticket = {
 }
 [@@deriving yojson]
 
+type ticket_assignment = {
+  ticket_id : string;
+  assignee_id : string;
+}
+[@@deriving yojson]
+
 let new_ticket id new_ticket = {
   id;
   user_id = new_ticket.user_id;
